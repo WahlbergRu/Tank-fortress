@@ -434,7 +434,7 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
 
         if(index){
             $scope.model.cubic.tooltipModel = $scope.model.layers.storage[index].parameters;
-            console.log($scope.model.cubic.tooltipModel)
+            console.log($scope.model.cubic.tooltipModel);
         }
 
         //console.log(obj)
