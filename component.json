@@ -16,5 +16,15 @@
     "canvas",
     "3D"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "nsPopover": "^0.6.8",
+    "angular-route": "^1.5.0",
+    "angular": "^1.5.0",
+    "bootstrap-sass": "^3.3.6",
+    "bootswatch": "^3.3.6+1",
+    "angular-drag-and-drop-lists": "^1.4.0",
+    "angular-bootstrap": "^1.3.2"
+  }
 }

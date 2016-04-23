@@ -26,7 +26,7 @@ module.exports = function(options) {
 
   return {
     entry: {
-      isomer: './index.js'
+      isomer: './app.js'
     },
     output: {
       library: 'Isomer',

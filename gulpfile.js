@@ -24,13 +24,13 @@ gulp.task('dist', function() {
     version: version
   };
 
-  var uncompressed = gulp.src('./index.js')
+  var uncompressed = gulp.src('./app.js')
     .pipe(gulpWebpack(webpackConfig()))
     .pipe(buffer())
     .pipe(header(banner, opts))
     .pipe(gulp.dest('./'));
 
-  var minified = gulp.src('./index.js')
+  var minified = gulp.src('./app.js')
     .pipe(gulpWebpack(webpackConfig({minify: true})))
     .pipe(buffer())
     .pipe(header(bannerMin, opts))
@@ -43,7 +43,7 @@ gulp.task('test', function() {
   var devWebpackConfig = webpackConfig({dev: true});
 
   new webpackDevServer(webpack(devWebpackConfig), {
-    contentBase: 'test/',
+    contentBase: 'app/',
     stats: {
       color: true
     }

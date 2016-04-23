@@ -6,13 +6,13 @@
  * Released under the MIT license
  * http://jdan.github.io/isomer/license.txt
  *
- * Date: 2015-04-09
+ * Date: 2016-03-11
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define(factory);
+		define([], factory);
 	else if(typeof exports === 'object')
 		exports["Isomer"] = factory();
 	else
@@ -72,7 +72,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	function Point(x, y, z) {
 	  if (this instanceof Point) {
@@ -92,6 +92,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Translate a point from a given dx, dy, and dz
 	 */
 	Point.prototype.translate = function(dx, dy, dz) {
+
+	  dx = (typeof dx === 'number') ? dx : 0;
+	  dy = (typeof dy === 'number') ? dy : 0;
+	  dz = (typeof dz === 'number') ? dz : 0;
+
 	  return new Point(
 	    this.x + dx,
 	    this.y + dy,
@@ -374,7 +379,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	function Canvas(elem) {
 	  this.elem = elem;
@@ -413,7 +418,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	/**
 	 * A color instantiated with RGB between 0-255
@@ -925,7 +930,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 7 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	function Vector (i, j, k) {
 	  this.i = (typeof i === 'number') ? i : 0;

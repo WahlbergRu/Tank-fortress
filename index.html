@@ -1,0 +1,258 @@
+<!doctype html>
+<html>
+<head>
+  <title>Isometric Canvas</title>
+  <link rel="stylesheet" href="app/app.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<base href="/">
+</head>
+<body ng-app="app">
+
+  <div id="control" ng-controller="control">
+    <a class="toolbar-button"
+       ng-repeat="(key, value) in model"
+       ng-class="{'selected': model[key].status}"
+       ng-click='buttonCtrl(key)'
+       ng-if="key !== 'layers'"
+            >
+      <i class="fa"
+          ng-class="{
+            'fa-cube': key === 'cubic',
+            'fa-pencil': key === 'line',
+            'fa-repeat': key === 'rotate',
+            'fa-eraser': key === 'eraser',
+            'fa-eyedropper': key === 'dropper',
+            'fa-expand': key === 'expand',
+            'fa-arrows': key === 'move'
+          }"></i>
+    </a>
+
+
+    <div class="modal-popup" ng-show="templateBind" ng-include="templateBind"></div>
+    <div class="console">
+
+          <h3>
+              Слои
+          </h3>
+          <ul class="dragndrop-list dib wide"
+              dnd-list="model.layers.storage">
+              <!-- The dnd-draggable directive makes an element draggable and will
+                   transfer the object that was assigned to it. If an element was
+                   dragged away, you have to remove it from the original list
+                   yourself using the dnd-moved attribute -->
+              <li ng-repeat="layer in model.layers.storage"
+                  dnd-draggable="layer"
+                  dnd-moved="model.layers.storage.splice($index, 1)"
+                  dnd-effect-allowed="move"
+                  dnd-dragstart="dragFunction.onDragstart(layer, event)"
+                  dnd-dragend="dragFunction.onDragend(layer, event)"
+                  ng-class="{'selected': layer.selected === layer}"
+                      >
+
+                    <span class="index">{{$index}}</span>
+
+                  {{layer.name}}
+
+                  <i class="fa fa-pencil edit" ng-click="buttonCtrl(layer.functionType, $index)"></i>
+              </li>
+          </ul>
+
+      </div>
+
+  </div>
+
+  <!-- TODO: сделать ширину и высоту в размер экрана-->
+  <canvas id="canvas"></canvas>
+
+
+  <script src="/bower_components/angular/angular.js"></script>
+  <script src="/bower_components/angular-route/angular-route.js"></script>
+  <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="/bower_components/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js"></script>
+  <script>
+    var $ = function(id){
+      return document.getElementById(id);
+    };
+
+    function setWindowSize(){
+      var w = window,
+              d = document,
+              e = d.documentElement,
+              g = d.getElementsByTagName('body')[0],
+              x = w.innerWidth || e.clientWidth || g.clientWidth,
+              y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+
+      $('canvas').setAttribute('width', x);
+      $('canvas').setAttribute('height', y);
+    }
+
+    window.addEventListener('resize', function(event){
+      setWindowSize();
+      console.info($('canvas'));
+    });
+
+    setWindowSize();
+    console.info($('canvas'));
+
+  </script>
+
+  <script type="text/ng-template" id="modal-cubic">
+    <div class="triangle"></div>
+    <div class="ns-popover-tooltip popover-object">
+        <div class="close" ng-click="hidePopover()">
+            <i class="fa fa-close"></i>
+        </div>
+
+        <div class="form-group dib">
+            <label for="input-tooltip-X" class="col-sm-2 control-label">Xw:</label>
+            <div class="col-sm-10">
+                <input type="number" ng-model="model.cubic.tooltipModel.size.x" id="input-tooltip-X" class="form-control" placeholder="Введите число">
+            </div>
+        </div>
+        <div class="form-group dib">
+            <label for="input-tooltip-Y" class="col-sm-2 control-label">Yw:</label>
+            <div class="col-sm-10">
+                <input type="number" ng-model="model.cubic.tooltipModel.size.y" id="input-tooltip-Y" class="form-control" placeholder="Введите число">
+            </div>
+        </div>
+        <div class="form-group dib">
+            <label for="input-tooltip-Z" class="col-sm-2 control-label">Zw:</label>
+            <div class="col-sm-10">
+                <input type="number" ng-model="model.cubic.tooltipModel.size.z" id="input-tooltip-Z" class="form-control" placeholder="Введите число">
+            </div>
+        </div>
+
+        <div class="form-group dib">
+            <label for="input-tooltip-X" class="col-sm-2 control-label">Xp:</label>
+            <div class="col-sm-10">
+                <input type="number" ng-model="model.cubic.tooltipModel.position.x" id="input-tooltip-X" class="form-control" placeholder="Введите число">
+            </div>
+        </div>
+        <div class="form-group dib">
+            <label for="input-tooltip-Y" class="col-sm-2 control-label">Yp:</label>
+            <div class="col-sm-10">
+                <input type="number" ng-model="model.cubic.tooltipModel.position.y" id="input-tooltip-Y" class="form-control" placeholder="Введите число">
+            </div>
+        </div>
+        <div class="form-group dib">
+            <label for="input-tooltip-Z" class="col-sm-2 control-label">Zp:</label>
+            <div class="col-sm-10">
+                <input type="number" ng-model="model.cubic.tooltipModel.position.z" id="input-tooltip-Z" class="form-control" placeholder="Введите число">
+            </div>
+        </div>
+
+        <button class="btn btn-primary" ng-click='toolbar("cubic")'>
+            Добавить
+        </button>
+    </div>
+  </script>
+  <script type="text/ng-template" id="modal-line">
+    <div class="triangle"></div>
+    <div class="ns-popover-tooltip popover-object">
+        <div class="close" ng-click="hidePopover()">
+            <i class="fa fa-close"></i>
+        </div>
+
+        <button class="btn btn-primary" ng-click='toolbar("cubic")'>
+            Добавить
+        </button>
+    </div>
+  </script>
+  <script type="text/ng-template" id="modal-rotate">
+    <div class="triangle"></div>
+    <div class="ns-popover-tooltip popover-object">
+        <div class="close" ng-click="hidePopover()">
+            <i class="fa fa-close"></i>
+        </div>
+
+        <button class="btn btn-primary" ng-click='toolbar("cubic")'>
+            Добавить
+        </button>
+    </div>
+  </script>
+  <script type="text/ng-template" id="modal-eraser">
+    <div class="triangle"></div>
+    <div class="ns-popover-tooltip popover-object">
+        <div class="close" ng-click="hidePopover()">
+            <i class="fa fa-close"></i>
+        </div>
+
+        <button class="btn btn-primary" ng-click='toolbar("cubic")'>
+            Добавить
+        </button>
+    </div>
+  </script>
+  <script type="text/ng-template" id="modal-dropper">
+    <div class="triangle"></div>
+    <div class="ns-popover-tooltip popover-object">
+        <div class="close" ng-click="hidePopover()">
+            <i class="fa fa-close"></i>
+        </div>
+
+        <button class="btn btn-primary" ng-click='toolbar("cubic")'>
+            Добавить
+        </button>
+    </div>
+  </script>
+  <script type="text/ng-template" id="modal-expand">
+    <div class="triangle"></div>
+    <div class="ns-popover-tooltip popover-object">
+        <div class="close" ng-click="hidePopover()">
+            <i class="fa fa-close"></i>
+        </div>
+
+        <button class="btn btn-primary" ng-click='toolbar("cubic")'>
+            Добавить
+        </button>
+    </div>
+  </script>
+  <script type="text/ng-template" id="modal-layers">
+    <div class="triangle"></div>
+    <div class="ns-popover-tooltip popover-object">
+
+        <div class="close" ng-click="hidePopover()">
+            <i class="fa fa-close"></i>
+        </div>
+
+        <h3>
+            Слои
+        </h3>
+        <ul class="dragndrop-list dib wide"
+            dnd-list="model.layers.storage">
+            <!-- The dnd-draggable directive makes an element draggable and will
+                 transfer the object that was assigned to it. If an element was
+                 dragged away, you have to remove it from the original list
+                 yourself using the dnd-moved attribute -->
+            <li ng-repeat="layer in model.layers.storage"
+                dnd-draggable="layer"
+                dnd-moved="model.layers.storage.splice($index, 1)"
+                dnd-effect-allowed="move"
+                dnd-dragstart="dragFunction.onDragstart(layer, event)"
+                dnd-dragend="dragFunction.onDragend(layer, event)"
+                ng-class="{'selected': layer.selected === layer}"
+                >
+                {{layer.name}}
+            </li>
+        </ul>
+
+    </div>
+  </script>
+  <script type="text/ng-template" id="modal-move">
+    <div class="triangle"></div>
+    <div class="ns-popover-tooltip popover-object">
+
+        <div class="close" ng-click="hidePopover()">
+            <i class="fa fa-close"></i>
+        </div>
+
+        <button class="btn btn-primary" ng-click='toolbar("cubic")'>
+            Добавить
+        </button>
+
+    </div>
+  </script>
+
+  <script src="dist/isomer.js"></script>
+  <script src="app/polyfill.js"></script>
+  <script src="app/control.js"></script>
+</html>
