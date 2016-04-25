@@ -59,7 +59,7 @@ Isomer uses [Gulp](http://gulpjs.com/) as a build tool. To build the project,
 first install the dependencies.
 
 ```
-$ npm install
+$ npm start
 ```
 
 Then run `npm run dist`:

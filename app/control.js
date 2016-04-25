@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'dndLists'])
+var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'dndLists', 'colorpicker.module'])
 
 .config(['$routeProvider', '$httpProvider' ,'$locationProvider', function($routeProvider, $httpProvider, $locationProvider) {
     //$locationProvider.html5Mode(true);
@@ -240,6 +240,12 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
     //layer: function(){mapLayers.grid({x: 10, y: 10, z: 20}, new Color(0, 0, 0, 0.1), false)},
     //layer: function(){iso.add(objects.Octahedron(new Point(2, 2, -2.5)).rotateZ(new Point(2.5, 2.5, 0), angle), new Color(0, 180, 180))},
 
+    $scope.settings = {
+        step: function() {
+            return 0.1;
+        }
+    };
+
     $scope.model = {
         move: {
             status: false,
@@ -426,13 +432,16 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
     $scope.buttonCtrl = function (obj, index) {
         toggleKey = obj;
 
+        //Возможно никогда не отрабатывает
         if(typeof(obj) === 'object'){
             key = obj.functionType;
         } else {
             key = obj;
         }
 
-        if(index){
+        console.log($scope.model[key].status);
+
+        if(index || index === 0){
             $scope.model.cubic.tooltipModel = $scope.model.layers.storage[index].parameters;
             console.log($scope.model.cubic.tooltipModel);
         }
@@ -442,17 +451,27 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
 
         //routeParamsModel  - доделать роутер
 
-        console.log($scope.model[key].status)
-
         if ($scope.model[key].status === false){
 
-            $location.hash(obj);
-            angular.forEach($scope.model, function (value, key) {
-                value.status = false;
-            });
+            $location.hash(key);
+            switch (key) {
+                case 'cubic':
+                    angular.forEach($scope.model, function (value, key) {
+                        value.status = false;
+                    });
 
-            $scope.model[key].status = true;
-            $scope.templateBind = 'modal-' + obj;
+                    $scope.model[key].status = true;
+                    $scope.templateBind = 'modal-' + key;
+                    break;
+                case 'dropper':
+                    $scope.model[key].status = true;
+                    $scope.templateBind = 'modal-' + key;
+
+                    break;
+                default:
+                    console.log('Ключ объекта не определён: ' + obj);
+                    break;
+            }
         } else {
             $location.hash('');
             $scope.hidePopover();

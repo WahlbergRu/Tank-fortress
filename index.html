@@ -53,7 +53,8 @@
 
                   {{layer.name}}
 
-                  <i class="fa fa-pencil edit" ng-click="buttonCtrl(layer.functionType, $index)"></i>
+                  <i class="fa fa-pencil edit"     ng-click="buttonCtrl('cubic', $index)"></i>
+                  <i class="fa fa-eyedropper edit" ng-click="buttonCtrl('dropper', $index)"></i>
               </li>
           </ul>
 
@@ -68,6 +69,7 @@
   <script src="/bower_components/angular/angular.js"></script>
   <script src="/bower_components/angular-route/angular-route.js"></script>
   <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="/bower_components/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js"></script>
   <script src="/bower_components/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js"></script>
   <script>
     var $ = function(id){
@@ -99,6 +101,7 @@
   <script type="text/ng-template" id="modal-cubic">
     <div class="triangle"></div>
     <div class="ns-popover-tooltip popover-object">
+
         <div class="close" ng-click="hidePopover()">
             <i class="fa fa-close"></i>
         </div>
@@ -106,44 +109,50 @@
         <div class="form-group dib">
             <label for="input-tooltip-X" class="col-sm-2 control-label">Xw:</label>
             <div class="col-sm-10">
-                <input type="number" ng-model="model.cubic.tooltipModel.size.x" id="input-tooltip-X" class="form-control" placeholder="Введите число">
+                <input type="number" step="{{settings.step()}}" ng-model="model.cubic.tooltipModel.size.x" id="input-tooltip-X" class="form-control" placeholder="Введите число">
             </div>
         </div>
+
         <div class="form-group dib">
             <label for="input-tooltip-Y" class="col-sm-2 control-label">Yw:</label>
             <div class="col-sm-10">
-                <input type="number" ng-model="model.cubic.tooltipModel.size.y" id="input-tooltip-Y" class="form-control" placeholder="Введите число">
+                <input type="number" step="{{settings.step()}}" ng-model="model.cubic.tooltipModel.size.y" id="input-tooltip-Y" class="form-control" placeholder="Введите число">
             </div>
         </div>
+
         <div class="form-group dib">
             <label for="input-tooltip-Z" class="col-sm-2 control-label">Zw:</label>
             <div class="col-sm-10">
-                <input type="number" ng-model="model.cubic.tooltipModel.size.z" id="input-tooltip-Z" class="form-control" placeholder="Введите число">
+                <input type="number" step="{{settings.step()}}" ng-model="model.cubic.tooltipModel.size.z" id="input-tooltip-Z" class="form-control" placeholder="Введите число">
             </div>
         </div>
 
         <div class="form-group dib">
             <label for="input-tooltip-X" class="col-sm-2 control-label">Xp:</label>
             <div class="col-sm-10">
-                <input type="number" ng-model="model.cubic.tooltipModel.position.x" id="input-tooltip-X" class="form-control" placeholder="Введите число">
+                <input type="number" step="{{settings.step()}}" ng-model="model.cubic.tooltipModel.position.x" id="input-tooltip-X" class="form-control" placeholder="Введите число">
             </div>
         </div>
+
         <div class="form-group dib">
             <label for="input-tooltip-Y" class="col-sm-2 control-label">Yp:</label>
             <div class="col-sm-10">
-                <input type="number" ng-model="model.cubic.tooltipModel.position.y" id="input-tooltip-Y" class="form-control" placeholder="Введите число">
+                <input type="number" step="{{settings.step()}}" ng-model="model.cubic.tooltipModel.position.y" id="input-tooltip-Y" class="form-control" placeholder="Введите число">
             </div>
         </div>
+
         <div class="form-group dib">
             <label for="input-tooltip-Z" class="col-sm-2 control-label">Zp:</label>
             <div class="col-sm-10">
-                <input type="number" ng-model="model.cubic.tooltipModel.position.z" id="input-tooltip-Z" class="form-control" placeholder="Введите число">
+                <input type="number" step="{{settings.step()}}" ng-model="model.cubic.tooltipModel.position.z" id="input-tooltip-Z" class="form-control" placeholder="Введите число">
             </div>
         </div>
+
 
         <button class="btn btn-primary" ng-click='toolbar("cubic")'>
             Добавить
         </button>
+
     </div>
   </script>
   <script type="text/ng-template" id="modal-line">
@@ -187,6 +196,13 @@
     <div class="ns-popover-tooltip popover-object">
         <div class="close" ng-click="hidePopover()">
             <i class="fa fa-close"></i>
+        </div>
+
+        <div class="form-group dib">
+            <label for="input-tooltip-Z" class="col-sm-2 control-label">С:</label>
+            <div class="col-sm-10">
+                <input class="form-control" colorpicker="rgba" type="text" ng-model="model.cubic.tooltipModel.color.string" placeholder="Выберите цвет" />
+            </div>
         </div>
 
         <button class="btn btn-primary" ng-click='toolbar("cubic")'>
