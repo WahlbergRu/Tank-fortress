@@ -1,7 +1,7 @@
 @import "_variables.scss";
 @import "_constructor.scss";
 @import "colorpicker.scss";
-//TODO: убрать к ебеням бутстрап. Кол-во использований: 1(бекграунд)
+//TODO: пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅ-пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: 1(пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
 @import "../../../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
 
 html, body{
@@ -150,7 +150,15 @@ body {
     border-bottom-width: 0px;
     line-height: 30px;
     padding: 0 4px;
-    
+
+    &.selected{
+      background: #999;
+      border-color: #555;
+      &+li{
+        border-top-color: #555;
+      }
+    }
+
     &:last-child{
       border-bottom-width: 1px;
     }

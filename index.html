@@ -46,15 +46,15 @@
                   dnd-effect-allowed="move"
                   dnd-dragstart="dragFunction.onDragstart(layer, event)"
                   dnd-dragend="dragFunction.onDragend(layer, event)"
-                  ng-class="{'selected': layer.selected === layer}"
-                      >
+                  ng-class="{'selected': layer.selected === true}"
+              >
 
                     <span class="index">{{$index}}</span>
 
                   {{layer.name}}
 
-                  <i class="fa fa-pencil edit"     ng-click="buttonCtrl('cubic', $index)"></i>
-                  <i class="fa fa-eyedropper edit" ng-click="buttonCtrl('dropper', $index)"></i>
+                  <i class="fa fa-pencil edit"     ng-click="buttonCtrl(layer, $index)"></i>
+                  <i class="fa fa-eyedropper edit" ng-click="buttonCtrl(layer, $index)"></i>
               </li>
           </ul>
 

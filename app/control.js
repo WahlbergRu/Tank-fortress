@@ -422,38 +422,45 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
     };
 
     $scope.templateBind = null;
-    var toggleKey = null;
 
-    $scope.hidePopover = function () {
-        $scope.model[key].status = false;
-        $scope.templateBind = false;
-    };
 
     $scope.buttonCtrl = function (obj, index) {
-        toggleKey = obj;
+        console.log(obj);
 
-        //Возможно никогда не отрабатывает
+        var toggleStatus = false;
+
+        for (var i = 0; i < $scope.model.layers.storage.length; i++) {
+            var layer = $scope.model.layers.storage[i];
+            layer.selected = false;
+        }
+
         if(typeof(obj) === 'object'){
             key = obj.functionType;
+            if (obj.selected){
+                toggleStatus = true;
+            } else {
+                obj.selected = true;
+            }
         } else {
+            toggleStatus = true;
             key = obj;
         }
 
-        console.log($scope.model[key].status);
 
-        if(index || index === 0){
+        if(index || index == 0){
             $scope.model.cubic.tooltipModel = $scope.model.layers.storage[index].parameters;
             console.log($scope.model.cubic.tooltipModel);
         }
 
-        //console.log(obj)
+        console.log($scope.model[key]);
 
 
         //routeParamsModel  - доделать роутер
 
-        if ($scope.model[key].status === false){
+        if (toggleStatus === false){
 
             $location.hash(key);
+
             switch (key) {
                 case 'cubic':
                     angular.forEach($scope.model, function (value, key) {
@@ -463,18 +470,22 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
                     $scope.model[key].status = true;
                     $scope.templateBind = 'modal-' + key;
                     break;
+
                 case 'dropper':
                     $scope.model[key].status = true;
                     $scope.templateBind = 'modal-' + key;
-
                     break;
+
                 default:
                     console.log('Ключ объекта не определён: ' + obj);
                     break;
             }
+
         } else {
             $location.hash('');
-            $scope.hidePopover();
+            //hidePopover;
+            $scope.model[key].status = false;
+            $scope.templateBind = false;
         }
 
         //console.log($scope.templateBind);
