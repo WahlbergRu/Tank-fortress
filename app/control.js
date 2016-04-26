@@ -424,40 +424,27 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
     $scope.templateBind = null;
 
 
-    $scope.buttonCtrl = function (obj, index) {
+    $scope.buttonCtrl = function (obj, type, index) {
         console.log(obj);
+        console.log(obj.selected);
+        if (!!obj.selected === false){
+            obj.selected = true;
 
-        var toggleStatus = false;
+            var key = type;
 
-        for (var i = 0; i < $scope.model.layers.storage.length; i++) {
-            var layer = $scope.model.layers.storage[i];
-            layer.selected = false;
-        }
-
-        if(typeof(obj) === 'object'){
-            key = obj.functionType;
-            if (obj.selected){
-                toggleStatus = true;
-            } else {
-                obj.selected = true;
+            for (var i = 0; i < $scope.model.layers.storage.length; i++) {
+                var layer = $scope.model.layers.storage[i];
+                layer.selected = false;
             }
-        } else {
-            toggleStatus = true;
-            key = obj;
-        }
 
 
-        if(index || index == 0){
-            $scope.model.cubic.tooltipModel = $scope.model.layers.storage[index].parameters;
-            console.log($scope.model.cubic.tooltipModel);
-        }
+            if(index || index == 0){
+                $scope.model.cubic.tooltipModel = $scope.model.layers.storage[index].parameters;
+                obj.selected = true;
+                //console.log($scope.model.cubic.tooltipModel);
+            }
 
-        console.log($scope.model[key]);
-
-
-        //routeParamsModel  - доделать роутер
-
-        if (toggleStatus === false){
+            //routeParamsModel  - доделать роутер
 
             $location.hash(key);
 
@@ -477,7 +464,7 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
                     break;
 
                 default:
-                    console.log('Ключ объекта не определён: ' + obj);
+                    console.log('Ключ объекта не определён: ' + key);
                     break;
             }
 
@@ -530,7 +517,9 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
             onDragstart: function(layer, event) {
                 initAnimationFrame.stop();
                 //TODO: сделать курсор о том что драг начался
+                event.dataTransfer.dropEffect = "copy";
                 //if (event.dataTransfer.setDragImage) {
+                //    console.log(event.dataTransfer)
                 //      var img = new Image();
                 //      img.src = 'framework/vendor/ic_content_copy_black_24dp_2x.png';
                 //      event.dataTransfer.setDragImage(img, 0, 0);
@@ -595,7 +584,7 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
     $scope.routeParamsModel = $location;
 
     if ($scope.routeParamsModel.hash()){
-        $scope.buttonCtrl($scope.routeParamsModel.hash())
+        $scope.buttonCtrl({}, $scope.routeParamsModel.hash())
     }
 
     initAnimationFrame.start();

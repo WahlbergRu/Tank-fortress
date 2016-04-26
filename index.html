@@ -12,7 +12,7 @@
     <a class="toolbar-button"
        ng-repeat="(key, value) in model"
        ng-class="{'selected': model[key].status}"
-       ng-click='buttonCtrl(key)'
+       ng-click='buttonCtrl({}, key)'
        ng-if="key !== 'layers'"
             >
       <i class="fa"
@@ -53,8 +53,8 @@
 
                   {{layer.name}}
 
-                  <i class="fa fa-pencil edit"     ng-click="buttonCtrl(layer, $index)"></i>
-                  <i class="fa fa-eyedropper edit" ng-click="buttonCtrl(layer, $index)"></i>
+                  <i class="fa fa-pencil edit"     ng-click="buttonCtrl(layer, 'cubic', $index)"></i>
+                  <i class="fa fa-eyedropper edit" ng-click="buttonCtrl(layer, 'dropper', $index)"></i>
               </li>
           </ul>
 
@@ -245,7 +245,7 @@
                 dnd-effect-allowed="move"
                 dnd-dragstart="dragFunction.onDragstart(layer, event)"
                 dnd-dragend="dragFunction.onDragend(layer, event)"
-                ng-class="{'selected': layer.selected === layer}"
+                ng-class="{'selected': layer.selected === true}"
                 >
                 {{layer.name}}
             </li>
