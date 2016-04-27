@@ -49,12 +49,13 @@
                   ng-class="{'selected': layer.selected === true}"
               >
 
-                    <span class="index">{{$index}}</span>
+                  <span class="index">{{$index}}</span>
 
                   {{layer.name}}
 
-                  <i class="fa fa-pencil edit"     ng-click="buttonCtrl(layer, 'cubic', $index)"></i>
-                  <i class="fa fa-eyedropper edit" ng-click="buttonCtrl(layer, 'dropper', $index)"></i>
+                  <i class="fa edit"               ng-class="(layer.isVisible)?'fa-eye':'fa-eye-slash'" ng-click="layer.isVisible = !layer.isVisible"></i>
+                  <i class="fa fa-pencil edit"                                                          ng-click="buttonCtrl(layer, 'cubic', $index)"></i>
+                  <i class="fa fa-eyedropper edit"                                                      ng-click="buttonCtrl(layer, 'dropper', $index)"></i>
               </li>
           </ul>
 
@@ -90,12 +91,10 @@
 
     window.addEventListener('resize', function(event){
       setWindowSize();
-      console.info($('canvas'));
+//      console.info($('canvas'));
     });
 
     setWindowSize();
-    console.info($('canvas'));
-
   </script>
 
   <script type="text/ng-template" id="modal-cubic">

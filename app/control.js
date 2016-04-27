@@ -170,14 +170,26 @@ app.factory('serialize', function(mapLayers, objects){
 
     function color(color){
 
-        if (!color.r) {color.r = 120}
-        if (!color.g) {color.g = 120}
-        if (!color.b) {color.b = 120}
-        if (!color.a) {color.a = 1}
+        switch (Object.prototype.toString.call(color)){
+            case '[object Object]':
+                if (!color.r) {color.r = 120}
+                if (!color.g) {color.g = 120}
+                if (!color.b) {color.b = 120}
+                if (!color.a) {color.a = 1}
 
-        return new Color(color.r, color.g, color.b, color.a)
+                return new Color(color.r, color.g, color.b, color.a)
+                break;
+            case '[object String]':
+                console.log(color);
+                return new Color(0,0,0,1);
+                break;
+            default:
+                console.log(color);
+                break;
+        }
 
     }
+
 
     return {
         shape: function(obj){
@@ -195,6 +207,7 @@ app.factory('serialize', function(mapLayers, objects){
                             obj.parameters.size.z
                         )
                     );
+                    //TODO: доделать создание в зависимости от цвета
                     //console.log('prism');
                     break;
                 case 'grid':
@@ -263,6 +276,12 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
                             x: 10,
                             y: 10,
                             z: 0
+                        },
+                        color: {
+                            r: 100,
+                            g: 0,
+                            b: 100,
+                            a: 1
                         }
                     },
                     name: 'cubic'
@@ -276,6 +295,7 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
                 {
                     shape: 'prism',
                     functionType: 'cubic',
+                    isVisible: true,
                     parameters: {
                         position: {
                             x: 0,
@@ -286,6 +306,12 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
                             x: 10,
                             y: 10,
                             z: 0
+                        },
+                        color: {
+                            r: 100,
+                            g: 0,
+                            b: 100,
+                            a: 1
                         }
                     },
                     name: 'Площадка'
@@ -293,6 +319,7 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
                 {
                     shape: 'prism',
                     functionType: 'cubic',
+                    isVisible: true,
                     parameters: {
                         position: {
                             x: 1,
@@ -314,6 +341,7 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
                 },
                 {
                     shape: 'grid',
+                    isVisible: true,
                     parameters: {
                         size: {
                             x: 10,
@@ -331,6 +359,7 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
                 },
                 {
                     shape: 'octahedron',
+                    isVisible: true,
                     parameters: {
                         size: {
                             x: 0,
@@ -429,9 +458,11 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
              Object.keys(obj).length && !!obj.selected === false ||
             (Object.keys(obj).length == 0 && toggleCtrl === false)
         ){
+
             if(Object.keys(obj).length == 0){
                 //Если новый объект
                 toggleCtrl = true;
+                console.log(obj);
                 $scope.model.cubic.tooltipModel = {};
             } else {
                 //Если в листе слоёв
@@ -439,51 +470,48 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
 
                 if(index || index == 0){
                     $scope.model.cubic.tooltipModel = $scope.model.layers.storage[index].parameters;
-                    obj.selected = true;
                     //console.log($scope.model.cubic.tooltipModel);
                 }
             }
 
-            var key = type;
-
-            for (var i = 0; i < $scope.model.layers.storage.length; i++) {
-                var layer = $scope.model.layers.storage[i];
-                layer.selected = false;
-            }
-
-
             //routeParamsModel  - доделать роутер
 
-            $location.hash(key);
+            $location.hash(type);
 
-            switch (key) {
+            switch (type) {
                 case 'cubic':
                     angular.forEach($scope.model, function (value, key) {
                         value.status = false;
                     });
 
-                    $scope.model[key].status = true;
-                    $scope.templateBind = 'modal-' + key;
+                    $scope.model[type].status = true;
+                    $scope.templateBind = 'modal-' + type;
                     break;
 
                 case 'dropper':
-                    $scope.model[key].status = true;
-                    $scope.templateBind = 'modal-' + key;
+                    $scope.model[type].status = true;
+                    $scope.templateBind = 'modal-' + type;
                     break;
 
                 default:
-                    console.log('Ключ объекта не определён: ' + key);
+                    console.log('Ключ объекта не определён: ' + type);
                     break;
             }
 
         } else {
+
+            //Обнуляем JS
+            for (var i = 0; i < $scope.model.layers.storage.length; i++) {
+                var layer = $scope.model.layers.storage[i];
+                layer.selected = false;
+            }
+
             $scope.hidePopover(type);
         }
 
         //console.log($scope.templateBind);
 
     };
-
     $scope.hidePopover = function(type){
         $location.hash('');
         toggleCtrl = false;
@@ -563,7 +591,7 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
             }
 
             for (var i = 0; i < $scope.model.layers.storage.length; i++) {
-                if ($scope.model.layers.storage[i]){
+                if ($scope.model.layers.storage[i] && $scope.model.layers.storage[i].isVisible){
                     serialize.shape($scope.model.layers.storage[i]);
                 }
             }
