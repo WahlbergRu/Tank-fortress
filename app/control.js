@@ -423,12 +423,26 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
 
     $scope.templateBind = null;
 
-
+    var toggleCtrl = false;
     $scope.buttonCtrl = function (obj, type, index) {
-        console.log(obj);
-        console.log(obj.selected);
-        if (!!obj.selected === false){
-            obj.selected = true;
+        if (
+             Object.keys(obj).length && !!obj.selected === false ||
+            (Object.keys(obj).length == 0 && toggleCtrl === false)
+        ){
+            if(Object.keys(obj).length == 0){
+                //Если новый объект
+                toggleCtrl = true;
+                $scope.model.cubic.tooltipModel = {};
+            } else {
+                //Если в листе слоёв
+                obj.selected = true;
+
+                if(index || index == 0){
+                    $scope.model.cubic.tooltipModel = $scope.model.layers.storage[index].parameters;
+                    obj.selected = true;
+                    //console.log($scope.model.cubic.tooltipModel);
+                }
+            }
 
             var key = type;
 
@@ -437,12 +451,6 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
                 layer.selected = false;
             }
 
-
-            if(index || index == 0){
-                $scope.model.cubic.tooltipModel = $scope.model.layers.storage[index].parameters;
-                obj.selected = true;
-                //console.log($scope.model.cubic.tooltipModel);
-            }
 
             //routeParamsModel  - доделать роутер
 
@@ -469,14 +477,18 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
             }
 
         } else {
-            $location.hash('');
-            //hidePopover;
-            $scope.model[key].status = false;
-            $scope.templateBind = false;
+            $scope.hidePopover(type);
         }
 
         //console.log($scope.templateBind);
 
+    };
+
+    $scope.hidePopover = function(type){
+        $location.hash('');
+        toggleCtrl = false;
+        $scope.model[type].status = false;
+        $scope.templateBind = false;
     };
 
     $scope.toolbar = function (key) {
