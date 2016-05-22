@@ -172,41 +172,53 @@ app.factory('serialize', function(mapLayers, objects){
 
         switch (Object.prototype.toString.call(color)){
             case '[object Object]':
-                if (!color.r) {color.r = 120}
-                if (!color.g) {color.g = 120}
-                if (!color.b) {color.b = 120}
-                if (!color.a) {color.a = 1}
-
-                return new Color(color.r, color.g, color.b, color.a)
+                //console.log(color);
+                return new Color(color.r, color.g, color.b, color.a);
                 break;
             case '[object String]':
-                console.log(color);
-                return new Color(0,0,0,1);
+                return new Color(color);
                 break;
             default:
                 console.log(color);
                 break;
         }
 
-    }
 
+
+    }
 
     return {
         shape: function(obj){
+
+            var colorObj,
+                startPos;
+
+            if (obj.parameters && obj.parameters.position){
+                startPos = new Point(
+                    obj.parameters.position.x,
+                    obj.parameters.position.y,
+                    obj.parameters.position.z
+                );
+            }
+
+            if (obj.parameters.color.string){
+                colorObj = color(obj.parameters.color.string.replace(/[^\d.,-]/g, ''));
+            } else {
+                colorObj = color(obj.parameters.color);
+            }
+
             switch(obj.shape){
                 case 'prism':
-                    iso.add(
+                    var prismObject =
                         Shape.Prism(
-                            new Point(
-                                obj.parameters.position.x,
-                                obj.parameters.position.y,
-                                obj.parameters.position.z
-                            ),
+                            startPos,
                             obj.parameters.size.x,
                             obj.parameters.size.y,
                             obj.parameters.size.z
-                        )
-                    );
+                        );
+
+                    iso.add(prismObject, colorObj);
+                    //console.log(obj.parameters.color);
                     //TODO: доделать создание в зависимости от цвета
                     //console.log('prism');
                     break;
@@ -214,14 +226,7 @@ app.factory('serialize', function(mapLayers, objects){
                     mapLayers.grid(obj.parameters.size, color(obj.parameters.color), obj.parameters.centred);
                     break;
                 case 'octahedron':
-                    //
-                    var octahedronObj = objects.Octahedron(
-                        new Point(
-                            obj.parameters.position.x,
-                            obj.parameters.position.y,
-                            obj.parameters.position.z
-                        )
-                    );
+                    var octahedronObj = objects.Octahedron(startPos);
 
                     if (obj.parameters.rotate){
                         for (var i = 0; i < obj.parameters.rotate.length; i++) {
@@ -233,8 +238,6 @@ app.factory('serialize', function(mapLayers, objects){
                             );
                         }
                     }
-
-
 
                     iso.add(octahedronObj, color(obj.parameters.color));
                     break;
@@ -489,6 +492,10 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
                     break;
 
                 case 'dropper':
+                    if (obj.parameters && obj.parameters.color){
+                        console.log(obj.parameters.color);
+                        obj.parameters.color.string = 'rgba(' + obj.parameters.color.r + ',' + obj.parameters.color.g + ',' + obj.parameters.color.b + ',' + obj.parameters.color.a + ')';
+                    }
                     $scope.model[type].status = true;
                     $scope.templateBind = 'modal-' + type;
                     break;
