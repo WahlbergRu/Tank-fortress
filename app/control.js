@@ -106,7 +106,6 @@ app.factory('objects', function () {
         }
     }
 });
-
 app.factory('mapLayers', function () {
     return {
         grid: function(size, color, centred) {
@@ -154,7 +153,6 @@ app.factory('mapLayers', function () {
         }
     }
 });
-
 app.factory('visualFunction', function () {
     return {
         randomColor: function () {
@@ -169,22 +167,19 @@ app.factory('visualFunction', function () {
 app.factory('serialize', function(mapLayers, objects){
 
     function color(color){
-
         switch (Object.prototype.toString.call(color)){
             case '[object Object]':
                 //console.log(color);
                 return new Color(color.r, color.g, color.b, color.a);
                 break;
             case '[object String]':
-                return new Color(color);
+                var colorArray = color.split(',');
+                return new Color(colorArray[0], colorArray[1], colorArray[2], colorArray[3]);
                 break;
             default:
                 console.log(color);
                 break;
         }
-
-
-
     }
 
     return {
@@ -218,12 +213,9 @@ app.factory('serialize', function(mapLayers, objects){
                         );
 
                     iso.add(prismObject, colorObj);
-                    //console.log(obj.parameters.color);
-                    //TODO: доделать создание в зависимости от цвета
-                    //console.log('prism');
                     break;
                 case 'grid':
-                    mapLayers.grid(obj.parameters.size, color(obj.parameters.color), obj.parameters.centred);
+                    mapLayers.grid(obj.parameters.size, colorObj, obj.parameters.centred);
                     break;
                 case 'octahedron':
                     var octahedronObj = objects.Octahedron(startPos);
@@ -234,7 +226,12 @@ app.factory('serialize', function(mapLayers, objects){
                             //console.log(rotateObj)
                             if (!rotateObj.angle) rotateObj.angle = function(){return angle};
                             octahedronObj = octahedronObj[obj.parameters.rotate[0].name](
-                                new Point(obj.parameters.position.x+rotateObj.x,obj.parameters.position.y+rotateObj.y,obj.parameters.position.z+rotateObj.z),rotateObj.angle()
+                                new Point(
+                                    obj.parameters.position.x+rotateObj.x,
+                                    obj.parameters.position.y+rotateObj.y,
+                                    obj.parameters.position.z+rotateObj.z
+                                ),
+                                rotateObj.angle()
                             );
                         }
                     }
@@ -483,6 +480,7 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
 
             switch (type) {
                 case 'cubic':
+                    //TODO: сделать общий сброс
                     angular.forEach($scope.model, function (value, key) {
                         value.status = false;
                     });
@@ -496,6 +494,13 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
                         console.log(obj.parameters.color);
                         obj.parameters.color.string = 'rgba(' + obj.parameters.color.r + ',' + obj.parameters.color.g + ',' + obj.parameters.color.b + ',' + obj.parameters.color.a + ')';
                     }
+                    $scope.model[type].status = true;
+                    $scope.templateBind = 'modal-' + type;
+                    break;
+
+
+                case 'rotate':
+                    console.log(obj.parameters);
                     $scope.model[type].status = true;
                     $scope.templateBind = 'modal-' + type;
                     break;
