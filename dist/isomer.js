@@ -840,10 +840,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * A prism located at origin with dimensions dx, dy, dz
 	 */
-	Shape.Prism = function(origin, dx, dy, dz) {
-	  dx = (typeof dx === 'number') ? dx : 1;
-	  dy = (typeof dy === 'number') ? dy : 1;
-	  dz = (typeof dz === 'number') ? dz : 1;
+	Shape.Prism = function(origin, size) {
+	  var dx = (typeof size.x === 'number') ? size.x : 1;
+	  var dy = (typeof size.y === 'number') ? size.y : 1;
+	  var dz = (typeof size.z === 'number') ? size.z : 1;
 
 	  /* The shape we will return */
 	  var prism = new Shape();

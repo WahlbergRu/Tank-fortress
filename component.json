@@ -18,7 +18,8 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "angular-bootstrap-colorpicker": "^3.0.25"
+    "angular-bootstrap-colorpicker": "^3.0.25",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "angular-route": "^1.5.0",

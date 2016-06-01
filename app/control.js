@@ -186,8 +186,11 @@ app.factory('serialize', function(mapLayers, objects){
         shape: function(obj){
 
             var colorObj,
+                shape,
+                sizeObj,
                 startPos;
 
+            //position
             if (obj.parameters && obj.parameters.position){
                 startPos = new Point(
                     obj.parameters.position.x,
@@ -196,52 +199,50 @@ app.factory('serialize', function(mapLayers, objects){
                 );
             }
 
-            if (obj.parameters.color.string){
+            //color
+            if (obj.parameters && obj.parameters.color.string){
                 colorObj = color(obj.parameters.color.string.replace(/[^\d.,-]/g, ''));
             } else {
                 colorObj = color(obj.parameters.color);
             }
 
+            //shape picker
             switch(obj.shape){
                 case 'prism':
-                    var prismObject =
-                        Shape.Prism(
-                            startPos,
-                            obj.parameters.size.x,
-                            obj.parameters.size.y,
-                            obj.parameters.size.z
-                        );
-
-                    iso.add(prismObject, colorObj);
+                    shape = Shape.Prism(startPos,obj.parameters.size);
                     break;
                 case 'grid':
+                    //TODO: подумать о mapLayers'ah
                     mapLayers.grid(obj.parameters.size, colorObj, obj.parameters.centred);
                     break;
                 case 'octahedron':
-                    var octahedronObj = objects.Octahedron(startPos);
-
-                    if (obj.parameters.rotate){
-                        for (var i = 0; i < obj.parameters.rotate.length; i++) {
-                            var rotateObj = obj.parameters.rotate[i];
-                            //console.log(rotateObj)
-                            if (!rotateObj.angle) rotateObj.angle = function(){return angle};
-                            octahedronObj = octahedronObj[obj.parameters.rotate[0].name](
-                                new Point(
-                                    obj.parameters.position.x+rotateObj.x,
-                                    obj.parameters.position.y+rotateObj.y,
-                                    obj.parameters.position.z+rotateObj.z
-                                ),
-                                rotateObj.angle()
-                            );
-                        }
-                    }
-
-                    iso.add(octahedronObj, color(obj.parameters.color));
+                    shape = objects.Octahedron(startPos);
                     break;
 
                 default:
                     break;
             }
+
+            //add rotate
+            if (obj.parameters.rotate){
+                for (var i = 0; i < obj.parameters.rotate.length; i++) {
+                    var rotateObj = obj.parameters.rotate[i];
+                    //console.log(rotateObj)
+                    if (!rotateObj.angle) rotateObj.angle = function(){return angle};
+                    console.log(shape)
+                    shape = shape[obj.parameters.rotate[i].name](
+                        new Point(
+                            obj.parameters.position.x+rotateObj.x,
+                            obj.parameters.position.y+rotateObj.y,
+                            obj.parameters.position.z+rotateObj.z
+                        ),
+                        rotateObj.angle()
+                    );
+                }
+            }
+
+            iso.add(shape, colorObj);
+
         }
     }
 });
@@ -331,6 +332,17 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
                             y: 1,
                             z: 1
                         },
+                        rotate: [
+                            {
+                                name: 'rotateZ',
+                                x: 0.5,
+                                y: 0.5,
+                                z: 0,
+                                angle: function(){
+                                    return angle
+                                }
+                            }
+                        ],
                         color: {
                             r: 100,
                             g: 100,
@@ -491,7 +503,6 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
 
                 case 'dropper':
                     if (obj.parameters && obj.parameters.color){
-                        console.log(obj.parameters.color);
                         obj.parameters.color.string = 'rgba(' + obj.parameters.color.r + ',' + obj.parameters.color.g + ',' + obj.parameters.color.b + ',' + obj.parameters.color.a + ')';
                     }
                     $scope.model[type].status = true;
