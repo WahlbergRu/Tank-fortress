@@ -25,8 +25,69 @@ var Color = Isomer.Color;
 //TODO: вынести в фактори
 //TODO: внести углы в контролеры или фактори
 var angle = 0,
+    time = 0,
     debug = false;
 
+
+app.factory('animation', function(){
+
+    function cubicBezier(x1, y1, x2, y2, epsilon){
+
+        var curveX = function(t){
+            var v = 1 - t;
+            return 3 * v * v * t * x1 + 3 * v * t * t * x2 + t * t * t;
+        };
+
+        var curveY = function(t){
+            var v = 1 - t;
+            return 3 * v * v * t * y1 + 3 * v * t * t * y2 + t * t * t;
+        };
+
+        var derivativeCurveX = function(t){
+            var v = 1 - t;
+            return 3 * (2 * (t - 1) * t + v * v) * x1 + 3 * (- t * t * t + 2 * v * t) * x2;
+        };
+
+        return function(t){
+
+            var x = t, t0, t1, t2, x2, d2, i;
+
+            // First try a few iterations of Newton's method -- normally very fast.
+            for (t2 = x, i = 0; i < 8; i++){
+                x2 = curveX(t2) - x;
+                if (Math.abs(x2) < epsilon) return curveY(t2);
+                d2 = derivativeCurveX(t2);
+                if (Math.abs(d2) < 1e-6) break;
+                t2 = t2 - x2 / d2;
+            }
+
+            t0 = 0, t1 = 1, t2 = x;
+
+            if (t2 < t0) return curveY(t0);
+            if (t2 > t1) return curveY(t1);
+
+            // Fallback to the bisection method for reliability.
+            while (t0 < t1){
+                x2 = curveX(t2);
+                if (Math.abs(x2 - x) < epsilon) return curveY(t2);
+                if (x > x2) t0 = t2;
+                else t1 = t2;
+                t2 = (t1 - t0) * .5 + t0;
+            }
+
+            // Failure
+            return curveY(t2);
+
+        };
+
+    };
+
+    return {
+        cubicBezier: function(c1,y1,x2,y2,epsilon){
+            return cubicBezier(c1,y1,x2,y2,epsilon);
+        }
+    }
+});
 app.factory('objects', function () {
     return {
         Stairs: function(origin) {
@@ -214,6 +275,7 @@ app.factory('serialize', function(mapLayers, objects){
                 case 'grid':
                     //TODO: подумать о mapLayers'ah
                     mapLayers.grid(obj.parameters.size, colorObj, obj.parameters.centred);
+                    return false;
                     break;
                 case 'octahedron':
                     shape = objects.Octahedron(startPos);
@@ -227,9 +289,18 @@ app.factory('serialize', function(mapLayers, objects){
             if (obj.parameters.rotate){
                 for (var i = 0; i < obj.parameters.rotate.length; i++) {
                     var rotateObj = obj.parameters.rotate[i];
-                    //console.log(rotateObj)
-                    if (!rotateObj.angle) rotateObj.angle = function(){return angle};
-                    console.log(shape)
+
+                    if (!(rotateObj.name == 'rotateX' || rotateObj.name == 'rotateY' || rotateObj.name == 'rotateZ')) {
+                        console.log(rotateObj.name);
+                        console.log('Не указан rotate');
+                        return false;
+                    };
+
+                    if (!rotateObj.angle) rotateObj.angle = function(){
+                        var epsilon = (1000 / 60 / time);
+                        return 2*Math.PI*animation.cubicBezier(0.25,0.25,0.75,0.75, epsilon)(time);
+                    };
+
                     shape = shape[obj.parameters.rotate[i].name](
                         new Point(
                             obj.parameters.position.x+rotateObj.x,
@@ -248,8 +319,8 @@ app.factory('serialize', function(mapLayers, objects){
 });
 
 
-app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uibTooltip', 'objects', 'mapLayers', 'visualFunction', 'serialize', '$location',
-    function ($scope, $route, $routeParams, $timeout, $uibTooltip, objects, mapLayers, visualFunction, serialize, $location) {
+app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uibTooltip', 'objects', 'mapLayers', 'visualFunction', 'serialize', '$location', 'animation',
+    function ($scope, $route, $routeParams, $timeout, $uibTooltip, objects, mapLayers, visualFunction, serialize, $location, animation) {
 
     //layer: function(){mapLayers.grid({x: 10, y: 10, z: 20}, new Color(0, 0, 0, 0.1), false)},
     //layer: function(){iso.add(objects.Octahedron(new Point(2, 2, -2.5)).rotateZ(new Point(2.5, 2.5, 0), angle), new Color(0, 180, 180))},
@@ -334,12 +405,13 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
                         },
                         rotate: [
                             {
-                                name: 'rotateZ',
+                                name: 'rotateX',
                                 x: 0.5,
                                 y: 0.5,
                                 z: 0,
                                 angle: function(){
-                                    return angle
+                                    var epsilon = (1000 / 60 / time);
+                                    return 2*Math.PI*animation.cubicBezier(0,0,1,1, epsilon)(time);
                                 }
                             }
                         ],
@@ -390,7 +462,8 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
                                 y: 0.5,
                                 z: 0,
                                 angle: function(){
-                                    return angle
+                                    var epsilon = (1000 / 60 / time);
+                                    return 2*Math.PI*animation.cubicBezier(0,0,1,1, epsilon)(time);
                                 }
                             }
                         ],
@@ -607,7 +680,8 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
         function loop() {
             angle += Math.PI / 90;
 
-            //console.log(angle)
+            if (time >= 1){time = 0}
+            time += 0.01;
 
             if (debug){
                 console.log($scope.model.layers.storage)
