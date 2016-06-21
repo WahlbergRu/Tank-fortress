@@ -55,7 +55,9 @@ app.factory('animation', function(){
             // First try a few iterations of Newton's method -- normally very fast.
             for (t2 = x, i = 0; i < 8; i++){
                 x2 = curveX(t2) - x;
-                if (Math.abs(x2) < epsilon) return curveY(t2);
+                if (Math.abs(x2) < epsilon) {
+                    return curveY(t2);
+                }
                 d2 = derivativeCurveX(t2);
                 if (Math.abs(d2) < 1e-6) break;
                 t2 = t2 - x2 / d2;
@@ -411,7 +413,7 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
                                 z: 0,
                                 angle: function(){
                                     var epsilon = (1000 / 60 / time);
-                                    return 2*Math.PI*animation.cubicBezier(0,0,1,1, epsilon)(time);
+                                    return 2*Math.PI*animation.cubicBezier(0.5,0.5,0.5,0.5, epsilon)(time);
                                 }
                             }
                         ],
@@ -451,9 +453,9 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
                             z: 0
                         },
                         position: {
-                            x: 0,
-                            y: 0,
-                            z: 0
+                            x: 1,
+                            y: 1,
+                            z: 1
                         },
                         rotate: [
                             {
@@ -463,7 +465,17 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
                                 z: 0,
                                 angle: function(){
                                     var epsilon = (1000 / 60 / time);
-                                    return 2*Math.PI*animation.cubicBezier(0,0,1,1, epsilon)(time);
+                                    return 2*Math.PI*animation.cubicBezier(0.5,0.5,0.5,0.5, epsilon)(time);
+                                }
+                            },
+                            {
+                                name: 'rotateX',
+                                x: 0.5,
+                                y: 0.5,
+                                z: 3,
+                                angle: function(){
+                                    var epsilon = (1000 / 60 / time);
+                                    return 2*Math.PI*animation.cubicBezier(0.5,0.5,0.5,0.5, epsilon)(time);
                                 }
                             }
                         ],
