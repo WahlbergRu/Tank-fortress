@@ -21,10 +21,8 @@
   "scripts": {
     "dist": "gulp",
     "test": "gulp test",
-
     "prestart": "npm install",
     "start": "node server",
-
     "prebuild-css": "npm install",
     "build-css": "node-sass --include-path app/assets/scss app/assets/scss/build.scss app/app.css",
     "prewatch-css": "npm run build-css",
@@ -39,10 +37,11 @@
     "gulp-webpack": "^1.3.2",
     "jscs": "^1.12.0",
     "jscs-loader": "0.0.5",
-    "open": "0.0.5",
     "node-sass": "^3.4.2",
+    "open": "0.0.5",
     "spa-server": "^0.1.0",
     "strftime": "^0.9.0",
+    "underscore": "^1.8.3",
     "webpack": "^1.8.2",
     "webpack-dev-server": "^1.8.0"
   }

@@ -103,6 +103,8 @@ var world = [
     ]
 ];
 
+world = world.reverse();
+
 app.factory('animation', function(){
 
     function cubicBezier(x1, y1, x2, y2, epsilon){
@@ -246,38 +248,54 @@ app.factory('objects', function () {
 app.factory('mapLayers', function () {
     return {
         land: function(origin, sizeXYZ, color) {
-            var x, y;
-            size = {x: 10, y: 10, z: 0};
-            var dx = (typeof size.x === 'number') ? size.x : 1;
-            var dy = (typeof size.y === 'number') ? size.y : 1;
-            var dz = (typeof size.z === 'number') ? size.z : 1;
-
             //console.log(origin)
-            console.log(size);
+
+            //TOP
+            var prism = new Shape();
+
 
             for (var z = 0; z < sizeXYZ.length; z++) {
                 var sizeXY = sizeXYZ[z];
                 for (var y = 0; y < sizeXY.length; y++) {
                     var sizeX = sizeXY[y];
                     for (var x = 0; x < sizeX.length; x++) {
-                        sizeX[x];
 
+                        if (sizeX[x] != 1) continue;
+
+                        /* Squares parallel to the x-axis */
+                        var face1 = new Path([
+                            new Point(x    , y    , z    ),
+                            new Point(x + 1, y    , z    ),
+                            new Point(x + 1, y    , z + 1),
+                            new Point(x    , y    , z + 1)
+                        ]);
+
+                        /* Push this face and its opposite */
+                        prism.push(face1);
+                        prism.push(face1.reverse().translate(0, 1, 0));
+
+                        /* Square parallel to the y-axis */
+                        var face2 = new Path([
+                            new Point(x    , y    , z    ),
+                            new Point(x    , y    , z + 1),
+                            new Point(x    , y + 1, z + 1),
+                            new Point(x    , y + 1, z    )
+                        ]);
+                        prism.push(face2);
+                        prism.push(face2.reverse().translate(1, 0, 0));
+
+                        var face3 = new Path([
+                            new Point(x    , y    , z    ),
+                            new Point(x + 1, y + 0, z + 0),
+                            new Point(x + 1, y + 1, z + 0),
+                            new Point(x + 0, y + 1, z + 0)
+                        ]);
+                        prism.push(face3.translate(0, 0, 1));
                     }
                 }
             }
 
-            //TOP
-            var prism = new Shape();
-
-            var face3 = new Path([
-                origin,
-                new Point(origin.x + dx, origin.y, origin.z),
-                new Point(origin.x + dx, origin.y + dy, origin.z),
-                new Point(origin.x, origin.y + dy, origin.z)
-            ]);
             /* This surface is oriented backwards, so we need to reverse the points */
-            prism.push(face3.reverse());
-            prism.push(face3.translate(0, 0, dz));
 
             return prism;
 
