@@ -28,6 +28,80 @@ var angle = 0,
     time = 0,
     debug = false;
 
+var world = [
+    [
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0]
+    ],
+    [
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,1 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,1 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0]
+    ],
+    [
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,1 ,1 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,1 ,1 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,1 ,1 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,1 ,1 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0]
+    ],
+    [
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,1 ,1 ,1 ,1 ,0 ,0 ,0],
+        [0, 0, 0 ,1 ,1 ,1 ,1 ,0 ,0 ,0],
+        [0, 0, 0 ,1 ,1 ,1 ,1 ,0 ,0 ,0],
+        [0, 0, 0 ,1 ,1 ,1 ,1 ,0 ,0 ,0],
+        [0, 0, 0 ,1 ,1 ,1 ,1 ,0 ,0 ,0],
+        [0, 0, 0 ,1 ,1 ,1 ,1 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0]
+    ],
+    [
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0],
+        [0, 0, 1 ,1 ,1 ,1 ,1 ,1 ,0 ,0],
+        [0, 0, 1 ,1 ,1 ,1 ,1 ,1 ,0 ,0],
+        [0, 0, 1 ,1 ,1 ,1 ,1 ,1 ,0 ,0],
+        [0, 0, 1 ,1 ,1 ,1 ,1 ,1 ,0 ,0],
+        [0, 0, 1 ,1 ,1 ,1 ,1 ,1 ,0 ,0],
+        [0, 0, 1 ,1 ,1 ,1 ,1 ,1 ,0 ,0],
+        [0, 0, 1 ,1 ,1 ,1 ,1 ,1 ,0 ,0],
+        [0, 0, 1 ,1 ,1 ,1 ,1 ,1 ,0 ,0],
+        [0, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0]
+    ],
+    [
+        [1, 1, 1 ,1 ,1 ,1 ,1 ,1 ,1 ,1],
+        [1, 1, 1 ,1 ,1 ,1 ,1 ,1 ,1 ,1],
+        [1, 1, 1 ,1 ,1 ,1 ,1 ,1 ,1 ,1],
+        [1, 1, 1 ,1 ,1 ,1 ,1 ,1 ,1 ,1],
+        [1, 1, 1 ,1 ,1 ,1 ,1 ,1 ,1 ,1],
+        [1, 1, 1 ,1 ,1 ,1 ,1 ,1 ,1 ,1],
+        [1, 1, 1 ,1 ,1 ,1 ,1 ,1 ,1 ,1],
+        [1, 1, 1 ,1 ,1 ,1 ,1 ,1 ,1 ,1],
+        [1, 1, 1 ,1 ,1 ,1 ,1 ,1 ,1 ,1],
+        [1, 1, 1 ,1 ,1 ,1 ,1 ,1 ,1 ,1]
+    ]
+];
 
 app.factory('animation', function(){
 
@@ -171,6 +245,43 @@ app.factory('objects', function () {
 });
 app.factory('mapLayers', function () {
     return {
+        land: function(origin, sizeXYZ, color) {
+            var x, y;
+            size = {x: 10, y: 10, z: 0};
+            var dx = (typeof size.x === 'number') ? size.x : 1;
+            var dy = (typeof size.y === 'number') ? size.y : 1;
+            var dz = (typeof size.z === 'number') ? size.z : 1;
+
+            //console.log(origin)
+            console.log(size);
+
+            for (var z = 0; z < sizeXYZ.length; z++) {
+                var sizeXY = sizeXYZ[z];
+                for (var y = 0; y < sizeXY.length; y++) {
+                    var sizeX = sizeXY[y];
+                    for (var x = 0; x < sizeX.length; x++) {
+                        sizeX[x];
+
+                    }
+                }
+            }
+
+            //TOP
+            var prism = new Shape();
+
+            var face3 = new Path([
+                origin,
+                new Point(origin.x + dx, origin.y, origin.z),
+                new Point(origin.x + dx, origin.y + dy, origin.z),
+                new Point(origin.x, origin.y + dy, origin.z)
+            ]);
+            /* This surface is oriented backwards, so we need to reverse the points */
+            prism.push(face3.reverse());
+            prism.push(face3.translate(0, 0, dz));
+
+            return prism;
+
+        },
         grid: function(size, color, centred) {
             var x, y;
 
@@ -270,9 +381,13 @@ app.factory('serialize', function(mapLayers, objects){
             }
 
             //shape picker
+            //TODO: вынести общую логику в общий объект, да бы выкинуть iso.add, add rotate на следующий лейр
             switch(obj.shape){
                 case 'prism':
                     shape = Shape.Prism(startPos,obj.parameters.size);
+                    break;
+                case 'land':
+                    shape = mapLayers.land(startPos, obj.parameters.size, colorObj);
                     break;
                 case 'grid':
                     //TODO: подумать о mapLayers'ah
@@ -282,7 +397,6 @@ app.factory('serialize', function(mapLayers, objects){
                 case 'octahedron':
                     shape = objects.Octahedron(startPos);
                     break;
-
                 default:
                     break;
             }
@@ -367,8 +481,7 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
             status: false,
             storage: [
                 {
-                    shape: 'prism',
-                    functionType: 'cubic',
+                    shape: 'land',
                     isVisible: true,
                     parameters: {
                         position: {
@@ -376,20 +489,40 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
                             y: 0,
                             z: 0
                         },
-                        size: {
-                            x: 10,
-                            y: 10,
-                            z: 0
-                        },
+                        size: world,
                         color: {
-                            r: 100,
-                            g: 0,
-                            b: 100,
+                            r: 50,
+                            g: 50,
+                            b: 50,
                             a: 1
                         }
                     },
-                    name: 'Площадка'
+                    name: 'Поверхность'
                 },
+                //{
+                //    shape: 'prism',
+                //    functionType: 'cubic',
+                //    isVisible: true,
+                //    parameters: {
+                //        position: {
+                //            x: 0,
+                //            y: 0,
+                //            z: 0
+                //        },
+                //        size: {
+                //            x: 10,
+                //            y: 10,
+                //            z: 0
+                //        },
+                //        color: {
+                //            r: 100,
+                //            g: 0,
+                //            b: 100,
+                //            a: 1
+                //        }
+                //    },
+                //    name: 'Площадка'
+                //},
                 {
                     shape: 'prism',
                     functionType: 'cubic',
