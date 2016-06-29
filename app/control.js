@@ -105,6 +105,8 @@ var world = [
 
 world = world.reverse();
 
+console.log(CSPL.getNaturalKs(world[0]));
+
 app.factory('animation', function(){
 
     function cubicBezier(x1, y1, x2, y2, epsilon){
