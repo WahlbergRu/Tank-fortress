@@ -271,9 +271,10 @@ app.factory('mapLayers', function () {
                         ]);
 
                         /* Push this face and its opposite */
-                        prism.push(face1);
-                        prism.push(face1.reverse().translate(0, 1, 0));
-
+                        //if (sizeXYZ[z+1] == 1) {
+                            prism.push(face1);
+                        //};
+                        //
                         /* Square parallel to the y-axis */
                         var face2 = new Path([
                             new Point(x    , y    , z    ),
@@ -281,8 +282,12 @@ app.factory('mapLayers', function () {
                             new Point(x    , y + 1, z + 1),
                             new Point(x    , y + 1, z    )
                         ]);
-                        prism.push(face2);
-                        prism.push(face2.reverse().translate(1, 0, 0));
+
+                        //Левая грань
+                        if (false){
+                            prism.push(face2);
+                        }
+                        if (sizeXY[x] == sizeXY[x - 1]) continue;
 
                         var face3 = new Path([
                             new Point(x    , y    , z    ),
@@ -290,7 +295,11 @@ app.factory('mapLayers', function () {
                             new Point(x + 1, y + 1, z + 0),
                             new Point(x + 0, y + 1, z + 0)
                         ]);
+
+                        //console.log('ger')
                         prism.push(face3.translate(0, 0, 1));
+
+
                     }
                 }
             }
