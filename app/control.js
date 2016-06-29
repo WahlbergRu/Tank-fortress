@@ -287,7 +287,9 @@ app.factory('mapLayers', function () {
                         //if (false){
                         //    prism.push(face2);
                         //}
-                        if (y>=1 && sizeXY[y-1][x] == sizeXY[y][x]) continue;
+                        if (y>=1 && sizeXY[y-1][x] == sizeXY[y][x]){
+                            continue;
+                        }
 
                         var face3 = new Path([
                             new Point(x    , y    , z    ),
