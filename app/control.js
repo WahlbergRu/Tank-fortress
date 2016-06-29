@@ -262,44 +262,47 @@ app.factory('mapLayers', function () {
 
                         if (sizeX[x] != 1) continue;
 
-                        /* Squares parallel to the x-axis */
-                        var face1 = new Path([
-                            new Point(x    , y    , z    ),
-                            new Point(x + 1, y    , z    ),
-                            new Point(x + 1, y    , z + 1),
-                            new Point(x    , y    , z + 1)
-                        ]);
-
                         /* Push this face and its opposite */
-                        //if (sizeXYZ[z+1] == 1) {
-                            prism.push(face1);
-                        //};
-                        //
-                        /* Square parallel to the y-axis */
-                        var face2 = new Path([
-                            new Point(x    , y    , z    ),
-                            new Point(x    , y    , z + 1),
-                            new Point(x    , y + 1, z + 1),
-                            new Point(x    , y + 1, z    )
-                        ]);
+                        if ((y<(sizeXY.length-1)) && (sizeXY[y+1][x] == sizeXY[y][x]) && (!sizeXY[y-1] || !sizeXY[y-1][x])) {
 
-                        //Левая грань
-                        //if (false){
-                        //    prism.push(face2);
-                        //}
-                        if (y>=1 && sizeXY[y-1][x] == sizeXY[y][x]){
-                            continue;
+                            /* Squares parallel to the x-axis */
+                            var face1 = new Path([
+                                new Point(x    , y    , z    ),
+                                new Point(x + 1, y    , z    ),
+                                new Point(x + 1, y    , z + 1),
+                                new Point(x    , y    , z + 1)
+                            ]);
+
+                            //if (sizeXYZ[z+1] == 1) {
+                            prism.push(face1);
+                            //};
+                            //
                         }
 
-                        var face3 = new Path([
-                            new Point(x    , y    , z    ),
-                            new Point(x + 1, y + 0, z + 0),
-                            new Point(x + 1, y + 1, z + 0),
-                            new Point(x + 0, y + 1, z + 0)
-                        ]);
+                        //Левая грань
+                        if ((x<=(sizeX.length-1)) && (sizeXY[y][x]) && (!sizeX[x-1])) {
+                            var face2 = new Path([
+                                new Point(x    , y    , z    ),
+                                new Point(x    , y    , z + 1),
+                                new Point(x    , y + 1, z + 1),
+                                new Point(x    , y + 1, z    )
+                            ]);
 
-                        //console.log('ger')
-                        prism.push(face3.translate(0, 0, 1));
+                            prism.push(face2);
+                        }
+
+                        if ((z<=(sizeXYZ.length-1)) && sizeXYZ[z][y][x] != sizeXYZ[z+1][y][x]){
+
+                            var face3 = new Path([
+                                new Point(x    , y    , z    ),
+                                new Point(x + 1, y + 0, z + 0),
+                                new Point(x + 1, y + 1, z + 0),
+                                new Point(x + 0, y + 1, z + 0)
+                            ]);
+
+                            //console.log('ger')
+                            prism.push(face3.translate(0, 0, 1));
+                        }
 
 
                     }
