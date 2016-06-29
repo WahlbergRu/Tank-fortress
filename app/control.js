@@ -284,10 +284,10 @@ app.factory('mapLayers', function () {
                         ]);
 
                         //Левая грань
-                        if (false){
-                            prism.push(face2);
-                        }
-                        if (sizeXY[x] == sizeXY[x - 1]) continue;
+                        //if (false){
+                        //    prism.push(face2);
+                        //}
+                        if (y>=1 && sizeXY[y-1][x] == sizeXY[y][x]) continue;
 
                         var face3 = new Path([
                             new Point(x    , y    , z    ),
