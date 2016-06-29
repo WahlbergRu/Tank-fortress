@@ -262,8 +262,8 @@ app.factory('mapLayers', function () {
 
                         if (sizeX[x] != 1) continue;
 
-                        /* Push this face and its opposite */
-                        if ((y<(sizeXY.length-1)) && (sizeXY[y+1][x] == sizeXY[y][x]) && (!sizeXY[y-1] || !sizeXY[y-1][x])) {
+                        /* Правая грань */
+                        if ((y<(sizeXY.length-1)) && (sizeXY[y][x]) && (!sizeXY[y-1] || !sizeXY[y-1][x])) {
 
                             /* Squares parallel to the x-axis */
                             var face1 = new Path([
@@ -279,7 +279,7 @@ app.factory('mapLayers', function () {
                             //
                         }
 
-                        //Левая грань
+                        /* Левая грань */
                         if ((x<=(sizeX.length-1)) && (sizeXY[y][x]) && (!sizeX[x-1])) {
                             var face2 = new Path([
                                 new Point(x    , y    , z    ),
@@ -291,6 +291,7 @@ app.factory('mapLayers', function () {
                             prism.push(face2);
                         }
 
+                        /* Верхняя грань */
                         if ((z<=(sizeXYZ.length-1)) && sizeXYZ[z][y][x] != sizeXYZ[z+1][y][x]){
 
                             var face3 = new Path([
