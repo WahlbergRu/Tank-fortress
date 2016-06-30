@@ -103,9 +103,40 @@ var world = [
     ]
 ];
 
-world = world.reverse();
+function splineWorld(world) {
+    var sizeXYZ = world;
+    var arr = [];
 
-console.log(CSPL.getNaturalKs(world[0]));
+    for (var z = 0; z < sizeXYZ.length; z++) {
+        var sizeXY = sizeXYZ[z];
+        for (var y = 0; y < sizeXY.length; y++) {
+            var sizeX = sizeXY[y];
+            for (var x = 0; x < sizeX.length; x++) {
+
+                if (sizeX[x] != 1) continue;
+
+                if ((z<=(sizeXYZ.length-1)) && sizeXYZ[z][y][x] != sizeXYZ[z+1][y][x]){
+                    arr.push({x: x, y: y, z: z})
+                }
+
+
+            }
+        }
+    }
+
+    console.log(arr);
+    return arr;
+}
+
+world = world.reverse();
+var splineLand = splineWorld(world, splineLand);
+
+// interpolate a line at a higher resolution
+//for(var i = 0; i < xs.length*4; i++) {
+    //console.log(spline(i/4, xs, ys));
+//}
+
+
 
 app.factory('animation', function(){
 
@@ -168,6 +199,9 @@ app.factory('animation', function(){
         }
     }
 });
+
+
+
 app.factory('objects', function () {
     return {
         Stairs: function(origin) {
