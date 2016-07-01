@@ -103,20 +103,24 @@ var world = [
     ]
 ];
 
-function splineWorld(world) {
+function splineWorld(world, step) {
     var sizeXYZ = world;
     var arr = [];
+    step = step || 1;
 
+
+    //TODO: пересортировать относительно объектов
     for (var z = 0; z < sizeXYZ.length; z++) {
         var sizeXY = sizeXYZ[z];
         for (var y = 0; y < sizeXY.length; y++) {
             var sizeX = sizeXY[y];
+            arr[y] = arr[y] || [];
             for (var x = 0; x < sizeX.length; x++) {
 
                 if (sizeX[x] != 1) continue;
 
                 if ((z<=(sizeXYZ.length-1)) && sizeXYZ[z][y][x] != sizeXYZ[z+1][y][x]){
-                    arr.push({x: x, y: y, z: z})
+                    arr[y].push({x: x, y: y, z: z})
                 }
 
 
@@ -124,17 +128,38 @@ function splineWorld(world) {
         }
     }
 
+    console.log(arr)
+
+    var splineArray = [];
+
+    //Проверить сплайн снова.
+
+    for (var i = 0; i < arr.length; i++) {
+        var coordinateToSpline = arr[i],
+            splineLineX = [],
+            splineLineZ = [];
+
+        for (var j = 0; j < coordinateToSpline.length; j++) {
+            splineLineX.push(coordinateToSpline[j].x);
+            splineLineZ.push(coordinateToSpline[j].z);
+        }
+
+        console.log(splineLineX);
+        console.log(splineLineZ);
+
+        //for(var splineIndex = 0; splineIndex < arr.length*step; i++) {
+        //    console.log(spline(splineIndex/step, splineLineX, splineLineX));
+        //}
+
+    }
+
     console.log(arr);
     return arr;
 }
 
 world = world.reverse();
-var splineLand = splineWorld(world, splineLand);
+var splineLand = splineWorld(world, 4);
 
-// interpolate a line at a higher resolution
-//for(var i = 0; i < xs.length*4; i++) {
-    //console.log(spline(i/4, xs, ys));
-//}
 
 
 
