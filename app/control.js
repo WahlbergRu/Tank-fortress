@@ -116,53 +116,46 @@ function splineWorld(world, step) {
             var sizeX = sizeXY[y];
             arr[y] = arr[y] || [];
             for (var x = 0; x < sizeX.length; x++) {
-
                 if (sizeX[x] != 1) continue;
-
                 if ((z<=(sizeXYZ.length-1)) && sizeXYZ[z][y][x] != sizeXYZ[z+1][y][x]){
                     arr[y].push({x: x, y: y, z: z})
                 }
-
-
             }
         }
     }
 
-    console.log(arr)
-
     var splineArray = [];
 
-    //Проверить сплайн снова.
-
     for (var i = 0; i < arr.length; i++) {
-        var coordinateToSpline = arr[i],
+        var coordinateToSpline,
             splineLineX = [],
             splineLineZ = [];
+
+        //Сортируем по x, что бы построить сплайн относительно x, z, где оридината - x
+        coordinateToSpline = _.sortBy(arr[i], function(o){return o.x});
 
         for (var j = 0; j < coordinateToSpline.length; j++) {
             splineLineX.push(coordinateToSpline[j].x);
             splineLineZ.push(coordinateToSpline[j].z);
         }
 
-        console.log(splineLineX);
-        console.log(splineLineZ);
-
-        //for(var splineIndex = 0; splineIndex < arr.length*step; i++) {
-        //    console.log(spline(splineIndex/step, splineLineX, splineLineX));
-        //}
-
+        splineArray[i] = [];
+        for(var splineIndex = 0; splineIndex < (arr[0].length)*step; splineIndex++) {
+            splineArray[i][splineIndex] = spline(splineIndex/step, splineLineX, splineLineZ);
+        }
     }
 
-    console.log(arr);
-    return arr;
+
+    return splineArray;
 }
 
 world = world.reverse();
-var splineLand = splineWorld(world, 4);
 
+//TODO: вынести step в сеттинги;
+var step = 4;
+var splineLand = splineWorld(world, step);
 
-
-
+//TODO: добавить в фактори сплайн интерпорляцию;
 app.factory('animation', function(){
 
     function cubicBezier(x1, y1, x2, y2, epsilon){
@@ -306,13 +299,40 @@ app.factory('objects', function () {
         }
     }
 });
+
+console.log(splineLand);
+
 app.factory('mapLayers', function () {
     return {
-        land: function(origin, sizeXYZ, color) {
+
+        land: function(origin){
+
+            var land = new Shape();
+
+            for (var y = 0; y < splineLand.length-1; y++) {
+                for (var z = 0; z < splineLand[y].length-1; z++){
+
+                    var detail = new Path([
+                        new Point(z/step + 0,  y + 0,  splineLand[y  ][z + 0]  ),
+                        new Point(z/step + 1,  y + 0,  splineLand[y  ][z + 1]  ),
+                        new Point(z/step + 1,  y + 1,  splineLand[y+1][z + 1]  ),
+                        new Point(z/step + 0,  y + 1,  splineLand[y+1][z + 0]  ),
+                    ]);
+
+                    land.push(detail);
+                }
+            }
+
+            return land;
+
+        },
+
+        cubicPyramid: function(origin, sizeXYZ, color) {
             //console.log(origin)
 
             //TOP
             var prism = new Shape();
+
 
 
             for (var z = 0; z < sizeXYZ.length; z++) {
