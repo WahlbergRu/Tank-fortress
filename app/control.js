@@ -300,7 +300,6 @@ app.factory('objects', function () {
     }
 });
 
-console.log(splineLand);
 
 app.factory('mapLayers', function () {
     return {
@@ -594,28 +593,8 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
         layers: {
             status: false,
             storage: [
-                {
-                    shape: 'land',
-                    isVisible: true,
-                    parameters: {
-                        position: {
-                            x: 0,
-                            y: 0,
-                            z: 0
-                        },
-                        size: world,
-                        color: {
-                            r: 50,
-                            g: 50,
-                            b: 50,
-                            a: 1
-                        }
-                    },
-                    name: 'Поверхность'
-                },
                 //{
-                //    shape: 'prism',
-                //    functionType: 'cubic',
+                //    shape: 'land',
                 //    isVisible: true,
                 //    parameters: {
                 //        position: {
@@ -623,20 +602,64 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
                 //            y: 0,
                 //            z: 0
                 //        },
-                //        size: {
-                //            x: 10,
-                //            y: 10,
-                //            z: 0
-                //        },
+                //        size: world,
                 //        color: {
-                //            r: 100,
-                //            g: 0,
-                //            b: 100,
+                //            r: 50,
+                //            g: 50,
+                //            b: 50,
                 //            a: 1
                 //        }
                 //    },
-                //    name: 'Площадка'
+                //    name: 'Поверхность'
                 //},
+                {
+                    shape: 'prism',
+                    functionType: 'cubic',
+                    isVisible: true,
+                    parameters: {
+                        position: {
+                            x: -50,
+                            y: -50,
+                            z: 0
+                        },
+                        size: {
+                            x: 100,
+                            y: 100,
+                            z: 0
+                        },
+                        color: {
+                            r: 212,
+                            g: 209,
+                            b: 164,
+                            a: 1
+                        }
+                    },
+                    name: 'Площадка'
+                },
+                {
+                    shape: 'prism',
+                    functionType: 'cubic',
+                    isVisible: true,
+                    parameters: {
+                        position: {
+                            x: 5,
+                            y: 5,
+                            z: 0
+                        },
+                        size: {
+                            x: 3,
+                            y: 3,
+                            z: 2
+                        },
+                        color: {
+                            r: 223,
+                            g: 148,
+                            b: 88,
+                            a: 1
+                        }
+                    },
+                    name: 'Куб'
+                },
                 {
                     shape: 'prism',
                     functionType: 'cubic',
@@ -662,6 +685,16 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
                                     var epsilon = (1000 / 60 / time);
                                     return 2*Math.PI*animation.cubicBezier(0.5,0.5,0.5,0.5, epsilon)(time);
                                 }
+                            },
+                            {
+                                name: 'rotateY',
+                                x: 0.5,
+                                y: 0.5,
+                                z: 0,
+                                angle: function(){
+                                    var epsilon = (1000 / 60 / time);
+                                    return 2*Math.PI*animation.cubicBezier(0.5,0.5,0.5,0.5, epsilon)(time);
+                                }
                             }
                         ],
                         color: {
@@ -677,8 +710,8 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
                     isVisible: true,
                     parameters: {
                         size: {
-                            x: 10,
-                            y: 10,
+                            x: 100,
+                            y: 100,
                             z: 20
                         },
                         color: {
@@ -986,3 +1019,5 @@ app.controller('control', ['$scope', '$route', '$routeParams', '$timeout', '$uib
     initAnimationFrame.start();
 
 }]);
+
+console.log(iso);
