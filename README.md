@@ -1,6 +1,12 @@
+## Required
+
+bower
+
 ## Build
- 
-```
-$ npm start 
-$ npm run build-css 
-``` 
+
+    bower install
+    npm install
+    npm run build-css
+    npm start
+
+Open browser at http://localhost:7999/#/
